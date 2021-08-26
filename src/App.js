@@ -17,10 +17,14 @@ function App() {
   
   var series = chart.series.push(new am4charts.LineSeries());
   series.name = "Data Quality";
-  //series.strokeLinecap.template.tooltipText = "Series: {name}\nDate: {dateX}\nValue: {valueY}";
-  //series.stroke.template.fill = am4core.color("#104547"); // fill
   series.dataFields.dateX = "date";
   series.dataFields.valueY= "value";
+  series.strokeWidth=5;
+  series.tooltipText= "Value: [bold]{valueY}[/]"
+  series.bullets.push(new am4charts.CircleBullet());
+
+  chart.cursor = new am4charts.XYCursor();
+
   chart.data = [
     {
       "date": "2020-07-23",
@@ -1565,12 +1569,33 @@ function App() {
       <div className="App">
         <Table dataSource={dataqualityDummy}>
           <Column title="Date" dataIndex="date"/>
-          <Column title="Group" dataIndex="group"/>
+          <Column title="Group" dataIndex="group" filters={[
+            {
+              text:'Voice',
+              value:'Voice',
+            },
+            {
+              text:'Payload',
+              value:'Payload',
+            },
+            {
+              text:'Throughput',
+              value:'Throughput',
+            },
+            {
+              text:'Jitter',
+              value:'Jitter',
+            },
+            {
+              text:'Packet',
+              value:'Packet',
+            },
+          ]} onFilter={(value, record) => record.group.indexOf(value) === 0}/>
           <Column title="Source" dataIndex="source"/>
           <Column title="PIC" dataIndex="pic"/>
           <Column title="Dependents" dataIndex="dependents"/>
           <Column title="KPI" dataIndex="kpi"/>
-          <Column title="Current Value" dataIndex="current_value"/>
+          <Column title="Current Value" dataIndex="current_value" defaultSortOrder="descend" sorter={(a,b) => a.current_value - b.current_value}/>
           <Column title="Threshold" dataIndex="threshold"/>
           <Column title="Status" dataIndex="status"/>
           <Column title="Remark" dataIndex="remark"/>
